@@ -60,17 +60,23 @@ foreach (var f in changedFiles)
     Console.WriteLine("  " + f);
 
 // 選擇輸出資料夾
-Console.Write("\n請輸入 輸出資料夾路徑: ");
+Console.Write("\n請輸入產出資料夾(絕對路徑D:\\XXX) 或一資料夾名(output_test): ");
 string outputPath = Console.ReadLine()?.Trim('"') ?? "";
 if (string.IsNullOrEmpty(outputPath))
 {
     Console.WriteLine("未輸入輸出路徑");
     return;
 }
+if(!Path.IsPathRooted(outputPath))
+{
+    Console.WriteLine("非絕對路徑，將使用相對路徑放在程式目錄");
+    outputPath = Path.Combine(Environment.CurrentDirectory, outputPath);
+}
 
 Directory.CreateDirectory(outputPath);
 
 // 複製檔案
+//Console.WriteLine($"目前目錄：{Environment.CurrentDirectory}");
 Console.WriteLine($"\n開始複製檔案到: {outputPath}");
 foreach (var file in changedFiles)
 {
@@ -89,6 +95,7 @@ foreach (var file in changedFiles)
 }
 
 Console.WriteLine("\n✅ 完成");
+Console.ReadKey();
 
 
 static string RunGit(string repoPath, string args)
